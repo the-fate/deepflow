@@ -3,3 +3,6 @@
 Line 7
 
 5 login
+
+shows dbs // shows database
+use <newDbName> Creates database

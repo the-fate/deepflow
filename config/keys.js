@@ -1,3 +1,3 @@
 module.exports = {
-    MongoURI: 'mongodb://localhost:27017/deepflodb?authSource=$[authSource] --username superuser --password root'
+    MongoURI: 'mongodb://localhost:27017/deepflodb'
 }
