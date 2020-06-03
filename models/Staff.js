@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
-var UserSchema = new mongoose.Schema({
+var StaffSchema = new mongoose.Schema({
+
     name: {
         type: String,
         required: true
@@ -13,12 +14,18 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
+    role : {
+        type: String,
+        required: true
+    },
+
     date: {
         type: Date,
-        defauly: Date.now
+        default: Date.now
     }
 });
 
-var User = mongoose.model('User', UserSchema);
+var Staff = mongoose.model('Staff', StaffSchema);
 
-module.exports = User;
+module.exports = Staff;

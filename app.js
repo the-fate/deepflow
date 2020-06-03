@@ -1,8 +1,15 @@
 var express = require('express');
 var expressLayouts = require('express-ejs-layouts');
 var mongoose = require('mongoose');
+var flash = require('connect-flash');
+var session = require('express-session')
+var passport = require('passport')
+var path = require('path')
 
 var app = express();
+
+// Passport config
+require('./config/passport')(passport);
 
 // DB Config
 var db = require('./config/keys').MongoURI;
@@ -19,6 +26,31 @@ app.set('view engine', 'ejs');
 
 // Bodyparser
 app.use(express.urlencoded({ extended: false }));
+
+// Static Files
+app.use(express.static(path.join(__dirname, 'static')));
+
+// Express Session
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true,
+  }))
+
+// Passport middleware 
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Connect Flash
+app.use(flash());
+
+// Global Vars
+app.use((req, res, next) =>{
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+})
 
 // Routes
 app.use('/', require('./routes/index'));

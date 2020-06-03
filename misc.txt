@@ -6,3 +6,24 @@ Line 7
 
 shows dbs // shows database
 use <newDbName> Creates database
+db.<newCollectionName>.insert({"key":"value})  Add ne newCollection
+db.<c.
+  // Hash Password
+                    bcrpyt.genSalt(10, (err, salt) => 
+                        bcrpyt.hash(newUser.password, salt, (err, hash) => {
+                        if(err) throw err;
+                        // Set password to hashed
+                        newUser.password = hash;
+                        //Save user
+                        newUser.save()
+                            .then(user => {
+                                res.redirect('/login');
+                            })
+                            .catch(err => console.log(err));
+                    }))
+                    console.log(newUser.password);
+                }
+            });
+        
+    }
+});
