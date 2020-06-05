@@ -2,6 +2,8 @@ var express  = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
 var passport = require('passport')
+var session = require('express-session')
+// var { authUser } = require('../config/auth')
 
 // User model
 var Staff = require('../models/Staff');
@@ -160,14 +162,33 @@ router.post('/student/register', (req, res) => {
 
 
 // Login Handle
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/users/login',
-        failureFlash: true
-    }) (req, res, next);
-});
+router.post('/login',
+ (req, res, next) => {
+  var email = req.body.email;
+  var password = req.body.password;
+  console.log(email)
 
+  Staff.findOne({  email : email}).then(function (user) {
+    if (!user){
+      Student.findOne({   email: email 
+      }).then(function (user) {
+        if (!user){
+          req.flash('error_msg', 'User does not exist')
+          res.redirect('./login');
+        } else {
+          // This is a student
+         req.session.user = user.dataValues;
+         res.redirect('/dashboard/student')
+        }
+      })
+    } else {
+      // This is a staff Log them in
+      req.session.user = user.dataValues;
+      res.redirect('/dashboard/teacher')
+    }
+  })
+});
+  
 // Logout Handle
 router.get('/logout', (req, res) => {
     req.logout();

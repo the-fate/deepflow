@@ -17,7 +17,7 @@ var StaffSchema = new mongoose.Schema({
 
     role : {
         type: String,
-        required: true
+        default: 'teacher'
     },
 
     date: {

@@ -16,7 +16,7 @@ var StudentSchema = new mongoose.Schema({
     },
 
     class : {
-        type: String,
+        type: Number,
         required: true
     },
 
