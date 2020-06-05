@@ -15,9 +15,9 @@ var StudentSchema = new mongoose.Schema({
         required: true
     },
 
-    class : {
-        type: Number,
-        required: true
+    role : {
+        type: String,
+        default: 'student'
     },
 
     date: {

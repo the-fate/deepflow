@@ -1,12 +1,15 @@
 var express = require('express');
 var expressLayouts = require('express-ejs-layouts');
 var mongoose = require('mongoose');
+var passport = require('passport');
 var flash = require('connect-flash');
 var session = require('express-session')
 var path = require('path') 
 
 var app = express();
 
+// Passport Config
+require('./config/passport')(passport);
 
 // DB Config
 var db = require('./config/keys').MongoURI;
@@ -34,6 +37,9 @@ app.use(session({
     saveUninitialized: true,
   }))
 
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Connect Flash
 app.use(flash());

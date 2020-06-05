@@ -1,7 +1,7 @@
 const ROLE = {
 
     REGISTRAR: 'registrar',
-    HEAD_TEACHER: 'head_teacher',
+    HEAD_TEACHER: 'head-teacher',
     TEACHER: 'teacher',
     STUDENT: 'student'
 }
@@ -32,10 +32,23 @@ function authRegistrar(req, res, next){
         res.redirect('/users/login')
     }
 }
+function ensureAuthenticated (req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    req.flash('error_msg', 'Please log in to view that resource');
+    res.redirect('/users/login');
+  }
 
+function forwardAuthenticated (req, res, next) {
+    if (!req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/dashboard');      
+  }
 
 
 module.exports = {
-    authUser
+    authUser, ensureAuthenticated, forwardAuthenticated
 
 }

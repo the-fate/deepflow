@@ -2,18 +2,17 @@ var express  = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
 var passport = require('passport')
-var session = require('express-session')
-// var { authUser } = require('../config/auth')
+var { forwardAuthenticated } = require('../config/auth');
 
 // User model
 var Staff = require('../models/Staff');
 var Student = require('../models/Student');
 
 // Login Page
-router.get('/login', (req, res) => res.render('login'));
+router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
 
 // Staff Register Page
-router.get('/staff/register', (req, res) => res.render('staff_register'));
+router.get('/staff/register', forwardAuthenticated, (req, res) => res.render('staff_register'));
 
 // Staff Register Handle
 router.post('/staff/register', (req, res) => {
@@ -163,37 +162,30 @@ router.post('/student/register', (req, res) => {
 
 // Login Handle
 router.post('/login',
- (req, res, next) => {
-  var email = req.body.email;
-  var password = req.body.password;
-  console.log(email)
-
-  Staff.findOne({  email : email}).then(function (user) {
-    if (!user){
-      Student.findOne({   email: email 
-      }).then(function (user) {
-        if (!user){
-          req.flash('error_msg', 'User does not exist')
-          res.redirect('./login');
-        } else {
-          // This is a student
-         req.session.user = user.dataValues;
-         res.redirect('/dashboard/student')
-        }
-      })
-    } else {
-      // This is a staff Log them in
-      req.session.user = user.dataValues;
+  passport.authenticate('local', {
+    failureRedired: '/login' }), 
+    (req, res,) => {
+    if (req.user.role == 'student'){
+      res.redirect('/dashboard/student')
+    }
+    if (req.user.role == 'teacher'){
       res.redirect('/dashboard/teacher')
     }
-  })
+    if (req.user.role == 'head-teacher'){
+      res.redirect('/dashboard/head-teacher')
+    }
+    if (req.user.role == 'registrar'){
+      res.redirect('/dashboard/registrar')
+    }
+    
+
 });
   
 // Logout Handle
 router.get('/logout', (req, res) => {
     req.logout();
     req.flash('success_msg', 'You are logged out');
-    res.redirect('/users/login');
+    res.redirect('/login');
 });
 
 module.exports = router;
