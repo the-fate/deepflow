@@ -8,9 +8,6 @@ var { forwardAuthenticated } = require('../config/auth');
 var Staff = require('../models/Staff');
 var Student = require('../models/Student');
 
-// Login Page
-router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
-
 // Staff Register Page
 router.get('/staff/register', forwardAuthenticated, (req, res) => res.render('staff_register'));
 
@@ -30,10 +27,10 @@ router.post('/staff/register', (req, res) => {
         errors.push({ msg: 'Passwords do not match' });
     }
 
-    // Check pass length
-    if(password.length < 6){
-        errors.push({ msg: 'Password should be at least 6 characters'});
-    }
+    // Check pass length: I removed this because it was inconvinient for testing
+    // if(password.length < 6){
+    //     errors.push({ msg: 'Password should be at least 6 characters'});
+    // }
 
     // Check for errors
     if(errors.length > 0) {
@@ -84,6 +81,31 @@ router.post('/staff/register', (req, res) => {
     }
   });
 
+// Staff Login Page
+router.get('/staff/login', forwardAuthenticated, (req, res) => res.render('staff_login'));
+
+// Staff Login Handle
+router.post('/staff/login', (req, res, next) => {
+  passport.authenticate('staff-local', {
+
+    // Passport redirects to /dashboard/staff after success and so on.
+    successRedirect: '/dashboard/staff',
+    failureRedirect: 'login',
+    failureFlash: true
+  })(req, res, next);
+});
+  
+// Staff Logout Handle
+router.get('/staff/logout', (req, res) => {
+    req.logout();
+    req.flash('success_msg', 'You are logged out');
+    res.redirect('login');
+});
+
+
+
+
+
 // Student Register Page
 router.get('/student/register', (req, res) => res.render('student_register'));
 
@@ -104,9 +126,9 @@ router.post('/student/register', (req, res) => {
     }
 
     // Check pass length
-    if(password.length < 6){
-        errors.push({ msg: 'Password should be at least 6 characters'});
-    }
+    // if(password.length < 6){
+    //     errors.push({ msg: 'Password should be at least 6 characters'});
+    // }
 
     // Check for errors
     if(errors.length > 0) {
@@ -140,13 +162,14 @@ router.post('/student/register', (req, res) => {
                         class: '1'
                     });
                     
-                  
+        // Password is hashed here using bcrypt. I don't understand it. But it's supposedly
+        // bad practice to store plain passwords on the DB.       
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(newStudent.password, salt, (err, hash) => {
               if (err) throw err;
               newStudent.password = hash;
               newStudent
-                .save()
+                .save() // Very important. It saves the new record to the DB
                 .then(user => {
                     req.flash('success_msg', 'You are now registered and can log in');
                   res.redirect('/users/login');
@@ -160,32 +183,25 @@ router.post('/student/register', (req, res) => {
   });
 
 
-// Login Handle
-router.post('/login',
-  passport.authenticate('local', {
-    failureRedired: '/login' }), 
-    (req, res,) => {
-    if (req.user.role == 'student'){
-      res.redirect('/dashboard/student')
-    }
-    if (req.user.role == 'teacher'){
-      res.redirect('/dashboard/teacher')
-    }
-    if (req.user.role == 'head-teacher'){
-      res.redirect('/dashboard/head-teacher')
-    }
-    if (req.user.role == 'registrar'){
-      res.redirect('/dashboard/registrar')
-    }
-    
+// Student Login Page
+  router.get('/student/login', forwardAuthenticated, (req, res) => res.render('student_login'));
 
+// Student Login Handle
+router.post('/student/login', (req, res, next) => {
+  passport.authenticate('student-local', {
+    successRedirect: '/dashboard/student',
+    failureRedirect: 'login',
+    failureFlash: true
+  })(req, res, next);
 });
   
-// Logout Handle
-router.get('/logout', (req, res) => {
+// Student Logout Handle
+router.get('/student/logout', (req, res) => {
     req.logout();
     req.flash('success_msg', 'You are logged out');
-    res.redirect('/login');
+    res.redirect('login');
 });
+
+
 
 module.exports = router;

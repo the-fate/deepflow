@@ -10,6 +10,7 @@ var app = express();
 
 // Passport Config
 require('./config/passport')(passport);
+require('./config/passportstudent')(passport);
 
 // DB Config
 var db = require('./config/keys').MongoURI;
