@@ -28,8 +28,8 @@
           </a>
         </li>
         <li>
-          <a href="student/mysubjects">
-            <i class="fas fa-chalkboard-teacher"></i> My Subjects
+          <a href="student/m">
+            <i class="fas fa-chalkboard-teacher"></i> <strong>My Subjects</strong>
           </a>
         </li>
 
@@ -52,7 +52,27 @@
         </div>
       </nav>
       <div class="container-fluid">
-        <h1>Dashboard</h1>
+        <h1>My Subjects</h1>
+        <div class="subjects">
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Grades</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i = 0; i < subjects.length; i++) {%>
+                        <tr>
+                            <th scope="row"><%= i%> </th>
+                            <td><%= subjects[i] %> </td>
+                        </tr>
+                        <% } %>
+                </tbody>
+              
+            </table>
+          </div>
         <p>
         <a href="/users/student/logout" class="btn btn-secondary">Logout</a>
         </p>

@@ -20,6 +20,15 @@ var StudentSchema = new mongoose.Schema({
         default: 'student'
     },
 
+    class : {
+        type: Number,
+    },
+
+    subjects : {
+        type: Array
+
+    },
+
     date: {
         type: Date,
         default: Date.now

@@ -26,7 +26,7 @@
 body {
   overflow-x: hidden;
   font-family: 'robotoregular', sans-serif;
-  font-size: 30px;
+  font-size: 14px;
 }
 
 /* Toggle Styles */
@@ -80,7 +80,7 @@ body {
 }
 
 #sidebar .nav{
-  
+  display: block;
 }
 
 #sidebar .nav a{

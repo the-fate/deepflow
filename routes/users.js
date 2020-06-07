@@ -71,7 +71,7 @@ router.post('/staff/register', (req, res) => {
                 .save()
                 .then(user => {
                     req.flash('success_msg', 'You are now registered and can log in');
-                  res.redirect('/users/login');
+                  res.redirect('/users/staff/login');
                 })
                 .catch(err => console.log(err));
             });
@@ -172,7 +172,7 @@ router.post('/student/register', (req, res) => {
                 .save() // Very important. It saves the new record to the DB
                 .then(user => {
                     req.flash('success_msg', 'You are now registered and can log in');
-                  res.redirect('/users/login');
+                  res.redirect('/users/student/login');
                 })
                 .catch(err => console.log(err));
             });

@@ -11,12 +11,23 @@ res.render('student_dashboard', {
     name: req.user.name
 }));
 
+router.get('/student/mysubjects', ensureAuthenticated, (req, res) =>
+res.render('student_dashboard_mysubjects', {
+    name: req.user.name,
+    subjects: req.user.subjects
+}));
+
 // Staff Dashboard
 
 router.get('/staff', ensureAuthenticated, (req, res) => 
 res.render('staff_dashboard', {
     // To add username
     name: req.user.name
+}));
+
+router.get('/admin', (req,res) =>
+res.render('admin_dashboard', {
+
 }));
 
 
